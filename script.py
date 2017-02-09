@@ -25,6 +25,7 @@ def sniffmgmt(p):
             # hasn't already been observed. Check our list and if the
             # client address isn't present, print the address and then add
             # it to our list.
+            #if p.addr2 not in observedclients:
                 print p.addr2
                 observedclients.append(p.addr2)
 # With the sniffmgmt() function complete, we can invoke the Scapy sniff()
