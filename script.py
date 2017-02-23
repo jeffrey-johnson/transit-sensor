@@ -5,6 +5,7 @@ from scapy.all import *
 from datetime import datetime
 import json
 import time
+import threading
 # Define the interface name that we will be sniffing from, you ca
 # change this if needed.
 interface = "wlan0"
