@@ -39,22 +39,24 @@ def sniffmgmt(p):
         # Make sure the packet has the Scapy Dot11 layer present
         if p.haslayer(Dot11):
             # Check to make sure this is a management frame (type=0) and that
-            # the subtype is one of our management frame subtypes indicating a
+            print "Has Dot11 Layer"
+# the subtype is one of our management frame subtypes indicating a
             # a wireless client
             if p.type == 0 and p.subtype in stamgmtstypes:
                 # We only want to print the MAC address of the client if it
                 # hasn't already been observed. Check our list and if the
                 # client address isn't present, print the address and then add
+                print "p type is 0 and has the subtype"
                 # it to our list.
                 #if p.addr2 not in observedclients:
-                    if p.addr2 not in observedclients:
-                        currentStamp = str(datetime.now()).split('.')[0]
-                        timeStamps.append(currentStamp)
-                        print p.addr2, currentStamp
-                        observedclients.append(p.addr2)
-                    combo = dict(zip(timeStamps,observedclients))
-                    print combo
-                    savetofile(combo)
+                if p.addr2 not in observedclients:
+                    currentStamp = str(datetime.now()).split('.')[0]
+                    timeStamps.append(currentStamp)
+                    print p.addr2, currentStamp
+                    observedclients.append(p.addr2)
+                combo = dict(zip(timeStamps,observedclients))
+                print combo
+                savetofile(combo)
 
 
         end = time.time() 
