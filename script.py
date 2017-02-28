@@ -9,9 +9,6 @@ import time
 import threading
 
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='[%(levelname)s] (%(threadName)-10s) %(message)s',
-                    )
 
 class MacScanner:
 	
@@ -22,7 +19,20 @@ class MacScanner:
 	self.combo = dict()
 	self.timeLimit = 0
 
-	"""Writes a dictionary containing the Timestamp and MAC address to a json file"""
+    def initLogger(self):
+        # create debug file handler and set level to debug
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG,
+            format='[%(levelname)s] (%(threadName)-10s) %(message)s',
+            )
+        handler = logging.FileHandler(os.path.join('/home/pi/Documents/GProjects/transit-sensor', "all.log"),"w")
+        handler.setLevel(logging.DEBUG)
+        formatter = logging.Formatter("%(levelname)s - %(message)s")
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
+	
+    """Writes a dictionary containing the Timestamp and MAC address to a json file"""
     def savetofile(self,d):
 	logging.debug("Writing to file")
         with open('data.json', 'w+') as fp:
@@ -37,20 +47,31 @@ class MacScanner:
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
 		    currentStamp = str(datetime.now()).split('.')[0]
-		    print (currentStamp, p.addr2)
-		    self.timeStamps.append(currentStamp)
+		    logging.debug(currentStamp + " " + p.addr2)
+                    self.timeStamps.append(currentStamp)
 		    self.observedclients.append(p.addr2)
 		    self.combo = dict(zip(self.timeStamps,self.observedclients))
 
+    def restart(self):
+        self.observedclients = []
+        self.timeStamps = []
+        self.combo = dict()
+        print(self.observedclients,self.timeStamps,self.combo)
+        logging.debug("Sleeping")
+        time.sleep(60)
+        logging.debug("Waking up")
 
     def startSniffing(self):
 	while True:
-	    sniff(iface=self.interface, prn=self.sniffmgmt, timeout=30)
+	    sniff(iface=self.interface, prn=self.sniffmgmt, timeout=69)
 	    self.savetofile(self.combo)
+            self.restart()
+            logging.debug("Starting sniffing again")
 
     
 def main():
     mac = MacScanner()
+    mac.initLogger()
     mac.startSniffing()    
 
 if __name__ == "__main__":
