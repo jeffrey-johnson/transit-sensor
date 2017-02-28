@@ -1,4 +1,7 @@
-# transit-sensor
+##transit-sensor
+
+
+**Summary** 
 
 Public transportation offers a convenient, affordable, and sustainable mean of transportation. However, public transportation can also be very inconvenient, as many individuals choose to take this form of transportation due to its affordability. This, in turn, causes a limited amount of open seats. These problems are studied and researched by transit planners who are tasked with forecasting long term demands and traffic patterns. 
 
