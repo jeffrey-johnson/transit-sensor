@@ -21,23 +21,23 @@ class MacScanner:
 	self.timeStamps = []
 	self.combo = dict()
 	self.timeLimit = 0
-	"""Writes a dictionary containing the Timestamp and MAC address to a json file"""
 
+	"""Writes a dictionary containing the Timestamp and MAC address to a json file"""
     def savetofile(self,d):
 	logging.debug("Writing to file")
         with open('data.json', 'w+') as fp:
-	    json.dump(d, fp)
+	    json.dump(d, fp,sort_keys=True)
 	call(["cat", "data.json"])
 
-	""" The sniffmgmt() function is called each time Scapy receives a packet
-	(we'll tell Scapy to use this function below with the sniff() function).
-	The packet that was sniffed is passed as the function argument, "p"."""
+    """Takes any given packet that scapy sniffs and filters it down to a macaddress that has not been seen yet
+       It then appends a timestamp to the address and saves it to a dictionary."""
     def sniffmgmt(self,p):
 	stamgmtstypes = (0, 2, 4)
 	if p.haslayer(Dot11):
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
 		    currentStamp = str(datetime.now()).split('.')[0]
+		    print (currentStamp, p.addr2)
 		    self.timeStamps.append(currentStamp)
 		    self.observedclients.append(p.addr2)
 		    self.combo = dict(zip(self.timeStamps,self.observedclients))
@@ -51,7 +51,6 @@ class MacScanner:
     
 def main():
     mac = MacScanner()
-    print(getattr(mac, 'interface'))
     mac.startSniffing()    
 
 if __name__ == "__main__":
