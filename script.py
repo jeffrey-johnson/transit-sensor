@@ -18,6 +18,10 @@ class MacScanner:
 	self.timeStamps = []
 	self.combo = dict()
 	self.timeLimit = 0
+        self.ourMacs = {'ac:0d:1b:d1:92:22':'Caleb',
+                        'ac:0d:1b:f5:f6:8a':'Jeff',
+                        '10:68:3f:3b:cc:c4':'Vitaly',
+                        'ec:9b:f3:77:8a:d2':'Jake'}
 
     def initLogger(self):
         # create debug file handler and set level to debug
@@ -46,7 +50,10 @@ class MacScanner:
 	if p.haslayer(Dot11):
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
-		    currentStamp = str(datetime.now()).split('.')[0]
+                    for key, value in self.ourMacs.items():
+                        if p.addr2 == key:
+                            logging.debug(p.addr2 + " - "+ value)
+                    currentStamp = str(datetime.now()).split('.')[0]
 		    logging.debug(currentStamp + " " + p.addr2)
                     self.timeStamps.append(currentStamp)
 		    self.observedclients.append(p.addr2)
