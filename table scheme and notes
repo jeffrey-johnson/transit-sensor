@@ -1,0 +1,51 @@
+user: root
+pass: Toh6Woeg
+
+
+
+CREATE TABLE Timestamps
+(
+recordID int NOT NULL AUTO_INCREMENT,
+time datetime NOT NULL,
+isInitialDetection bit NOT NULL,
+deviceID int NOT NULL,
+addressID int NOT NULL,
+routeID int NOT NULL,
+busID int NOT NULL,
+PRIMARY KEY (recordID),
+UNIQUE(addressID, time)
+);
+
+CREATE TABLE Devices
+(
+deviceID int NOT NULL AUTO_INCREMENT,
+name varchar(20),
+type varchar(10),
+OS varchar(10),
+versionNumber varchar(10),
+PRIMARY KEY (deviceID)
+);
+
+CREATE TABLE Addresses
+(
+addressID int NOT NULL AUTO_INCREMENT,
+addressString varchar(20) NOT NULL,
+createDate datetime DEFAULT NOW(),
+prefix varchar(8),
+addressType int NOT NULL,
+PRIMARY KEY (addressID)
+);
+
+ 
+CREATE TABLE BusSchedule
+(
+	scheduleID int NOT NULL AUTO_INCREMENT,
+	busID int NOT NULL,
+	routeID int NOT NULL,
+	deviceID int NOT NULL,
+	startTime datetime NOT NULL,
+	endTime datetime NOT NULL,
+	PRIMARY KEY(scheduleID)
+);
+
+(if isInitialDetection is true, the record is the first detection of the device.  If it's false, it is when the device stopped being detected.)
