@@ -16,26 +16,14 @@ class MacScanner:
 	self.interface = "wlan0"
 	self.observedclients = []
 	self.timeStamps = []
-	self.combo = dict()
-	self.timeLimit = 0
-        self.ourMacs = {'ac:0d:1b:d1:92:22':'Caleb',
-                        'ac:0d:1b:f5:f6:8a':'Jeff',
-                        '10:68:3f:3b:cc:c4':'Vitaly',
-                        'ec:9b:f3:77:8a:d2':'Jake'}
+        self.combo = dict() 
+        self.timeLimit = 0
+        self.DEVICE_ID = 1
 
     def initLogger(self):
         # create debug file handler and set level to debug
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
-        logging.basicConfig(level=logging.DEBUG,
-            format='[%(levelname)s] (%(threadName)-10s) %(message)s',
-            )
-        handler = logging.FileHandler(os.path.join('/home/pi/Documents/GProjects/transit-sensor', "all.log"),"w")
-        handler.setLevel(logging.DEBUG)
-        formatter = logging.Formatter("%(levelname)s - %(message)s")
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
-	
+        logging.basicConfig(filename='all.log',level=logging.DEBUG)
+
     """Writes a dictionary containing the Timestamp and MAC address to a json file"""
     def savetofile(self,d):
 	logging.debug("Writing to file")
@@ -50,36 +38,31 @@ class MacScanner:
 	if p.haslayer(Dot11):
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
-                    for key, value in self.ourMacs.items():
-                        if p.addr2 == key:
-                            logging.debug(p.addr2 + " - "+ value)
                     currentStamp = str(datetime.now()).split('.')[0]
-		    logging.debug(currentStamp + " " + p.addr2)
+                    logging.info(p.addr2 + " " + currentStamp)
                     self.timeStamps.append(currentStamp)
 		    self.observedclients.append(p.addr2)
 		    self.combo = dict(zip(self.timeStamps,self.observedclients))
 
-    def restart(self):
+    def restart(self, timeLimit):
         self.observedclients = []
         self.timeStamps = []
         self.combo = dict()
-        print(self.observedclients,self.timeStamps,self.combo)
         logging.debug("Sleeping")
-        time.sleep(60)
+        time.sleep(timeLimit)
         logging.debug("Waking up")
 
-    def startSniffing(self):
+    def startSniffing(self,timeLimit):
 	while True:
-	    sniff(iface=self.interface, prn=self.sniffmgmt, timeout=69)
+	    sniff(iface=self.interface, prn=self.sniffmgmt, timeout=timeLimit)
 	    self.savetofile(self.combo)
-            self.restart()
+            self.restart(timeLimit)
             logging.debug("Starting sniffing again")
-
     
-def main():
+def main(timeLimit = 60):
     mac = MacScanner()
     mac.initLogger()
-    mac.startSniffing()    
+    mac.startSniffing(timeLimit)
 
 if __name__ == "__main__":
     main()
