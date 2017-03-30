@@ -20,15 +20,10 @@ class MacScanner:
 	self.interface = "wlan0"
 	self.observedclients = []
 	self.timeStamps = []
-<<<<<<< HEAD
-        #self.combo = json.loads('{"TimeStamps" : "", "Addresses": ""}') 
         self.combo = dict()
-=======
-        self.combo = {"Time Stamps":[], "Addresses":[]} 
->>>>>>> d84343def464c1ed48f3ddd2a8fe3020bb3db0c1
+        self.combo = {'DEVICE_ID':1,"Time Stamps":[], "Addresses":[]} 
         self.timeLimit = 0
 	self.dictionary =dict()	    
-        self.DEVICE_ID = 1
 
     def initLogger(self):
         # create debug file handler and set level to debug
@@ -50,17 +45,9 @@ class MacScanner:
 		if p.addr2 not in self.observedclients:
                     currentStamp = str(datetime.now()).split('.')[0]
                     logging.info(p.addr2 + " " + currentStamp)
-<<<<<<< HEAD
-                    self.timeStamps.append(currentStamp)
-		    self.observedclients.append(p.addr2)
-                    #self.combo['TimeStamps'].append(self.timeStamps)
-                   # self.combo.address.append(observedclients)
-		    self.combo = dict(zip(self.timeStamps,self.observedclients))
-=======
 		    self.combo['Time Stamps'].append(currentStamp)
 		    self.combo['Addresses'].append(p.addr2)
 		    self.dictionary = dict(self.combo)
->>>>>>> d84343def464c1ed48f3ddd2a8fe3020bb3db0c1
 
     def restart(self, timeLimit):
         self.observedclients = []
