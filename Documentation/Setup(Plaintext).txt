@@ -1,0 +1,40 @@
+Transit Sensor Raspberry Pi Setup
+Last Revision by Christopher Lail on 3/30/2017
+
+1. Install the Raspbian OS .
+	- Download Raspbian Jessie Lite.
+	- Unzip the folder to access the .img file.
+	- Insert the SD card which you wish to install the OS onto.
+	- Download and install Win32DiskImager onto your PC.
+	- Run Win32DiskImager.
+	- In Win32DiskImager select the 2017-01-11-raspbian-jessie-lite.img 
+		(The date might have changed since this guide was written)
+	- Select the SD card from the device box.
+		(Be sure to choose the correct drive or you could destroy data on your PC)
+	- Click 'Write' and wait for the write to complete.
+	- Eject the SD card and put it into the Raspberry Pi.
+2. Setup Transit Sensor data on Raspberry Pi.	
+	- Plug monitor, power, Ethernet, and keyboard into the Raspberry Pi.
+	- You will see the screen fill with text as it installs the OS onto the Raspberry Pi.
+	- Once prompted for login input “pi” for the login, and “raspberry” for the password.
+	- Once logged in, type “clear” to clear the screen, then type “sudo apt-get install git” to install   the GitHub.
+	- Type in “git clone git@github.com:jeffrey-johnson/transit-sensor.git”.
+	- This will copy all the files necessary for the transit sensor to work.
+3. Setup remote access and the proper keyboard layout.
+	- Type “sudo raspi-config”.
+	- Choose the “5 Interfacing Options” selection.
+	- Choose the “2 SSH” selection
+	- Select “Yes”, then “Ok”.
+	- Select the “4 Localization Options” selection.
+	- Select the “I3 Change Keyboard Layout” selection.
+	- Choose “Generic 105-key (Intl) PC”.
+	- If the next screen does not have “English (US)” option, select “Other”
+	- Select “English (US)”, then select “English (US)” again.
+	- Select “The default for the keyboard layout”.
+	- Select “No compose key”.
+	- Select “Finish”
+	- Type “sudo reboot”. 
+	- Once rebooted, login using the same login as above.
+4.  Install Scapy library.
+	- 
+	- 
