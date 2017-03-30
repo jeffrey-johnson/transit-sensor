@@ -8,15 +8,20 @@ import json
 import time
 import threading
 
-
-
+"""Things to fix
+    make json object like { timestamps:{ ''''''}
+                            addresses: {'''''}
+                          }
+                            
+"""
 class MacScanner:
 	
     def __init__(self):
 	self.interface = "wlan0"
 	self.observedclients = []
 	self.timeStamps = []
-        self.combo = dict() 
+        #self.combo = json.loads('{"TimeStamps" : "", "Addresses": ""}') 
+        self.combo = dict()
         self.timeLimit = 0
         self.DEVICE_ID = 1
 
@@ -27,7 +32,7 @@ class MacScanner:
     """Writes a dictionary containing the Timestamp and MAC address to a json file"""
     def savetofile(self,d):
 	logging.debug("Writing to file")
-        with open('data.json', 'w+') as fp:
+        with open('data.json', 'a+') as fp:
 	    json.dump(d, fp,sort_keys=True)
 	call(["cat", "data.json"])
 
@@ -42,6 +47,8 @@ class MacScanner:
                     logging.info(p.addr2 + " " + currentStamp)
                     self.timeStamps.append(currentStamp)
 		    self.observedclients.append(p.addr2)
+                    #self.combo['TimeStamps'].append(self.timeStamps)
+                   # self.combo.address.append(observedclients)
 		    self.combo = dict(zip(self.timeStamps,self.observedclients))
 
     def restart(self, timeLimit):
