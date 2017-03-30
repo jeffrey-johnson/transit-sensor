@@ -7,13 +7,13 @@ CREATE TABLE Timestamps
 (
 recordID int NOT NULL AUTO_INCREMENT,
 time datetime NOT NULL,
-isInitialDetection bit NOT NULL,
-deviceID int NOT NULL,
-addressID int NOT NULL,
-routeID int NOT NULL,
-busID int NOT NULL,
+address varchar(20) NOT NULL,
+isInitialDetection bit,
+deviceID int,
+routeID int,
+busID int,
 PRIMARY KEY (recordID),
-UNIQUE(addressID, time)
+UNIQUE(address, time)
 );
 
 CREATE TABLE Devices
