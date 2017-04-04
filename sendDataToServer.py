@@ -12,8 +12,11 @@ print(data["timestamps"][0])
 for x in range(0, len(data["timestamps"])):
 	timestamp = data["timestamps"][x]
 	timestampDate = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
+	isoDate = timestampDate.isoformat()
+	unixtime = datetime.mktime(timestampDate.timetuple())
+	#print unixtime
 	thisRecord = {"time":timestamp,"address":data["addresses"][x],"deviceID":data["deviceID"]}
-	resp = requests.post("http://uaf135131.ddns.uark.edu/api.php/Timestamps", data=thisRecord)
+	resp = requests.post("http://uaf135131.ddns.uark.edu/api.php/Timestamps", json=thisRecord)#json=thisRecord)
 	if resp.status_code != 200:
 		print('Failed '+str(x))
 		print(resp.status_code)
