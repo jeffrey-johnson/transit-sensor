@@ -8,12 +8,6 @@ import json
 import time
 import threading
 
-"""Things to fix
-    make json object like { timestamps:{ ''''''}
-                            addresses: {'''''}
-                          }
-                            
-"""
 class MacScanner:
 	
     def __init__(self):
