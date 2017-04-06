@@ -6,7 +6,7 @@ import logging
 import sys
 import json
 import time
-import threading
+import os
 
 class MacScanner:
 	
@@ -14,10 +14,9 @@ class MacScanner:
 	self.interface = "wlan0"
 	self.observedclients = []
 	self.timeStamps = []
-        self.combo = dict()
-        self.combo = {'DEVICE_ID':1,"Time Stamps":[], "Addresses":[]} 
+        self.combo = {"DEVICE_ID":1,"Time Stamps":[], "Addresses":[]} 
         self.timeLimit = 0
-	self.dictionary =dict()	    
+	self.dictionary =dict()
 
     def initLogger(self):
         # create debug file handler and set level to debug
@@ -25,10 +24,16 @@ class MacScanner:
 
     """Writes a dictionary containing the Timestamp and MAC address to a json file"""
     def savetofile(self,d):
-	logging.debug("Writing to file")
-        with open('data.json', 'a+') as fp:
-	    json.dump(d, fp,sort_keys=True)
-	call(["cat", "data.json"])
+        fileCounter = 0
+        filetime = str(datetime.now())
+        if not(os.path.exists(filetime.split()[0])):
+            os.makedirs(filetime.split()[0])
+        logging.debug("Writing to file")
+        for root, dirs, files in os.walk(filetime.split()[0],topdown=False):
+            fileCounter = int(files[0].split('.')[0][4:]) + 1
+        with open(os.path.join(filetime.split()[0], 'data'+str(fileCounter)+'.json'), 'w') as fp:
+            json.dump(d, fp,sort_keys=False)
+	call(["ls", filetime.split()[0]])
 
     """Takes any given packet that scapy sniffs and filters it down to a macaddress that has not been seen yet
        It then appends a timestamp to the address and saves it to a dictionary."""
@@ -37,16 +42,17 @@ class MacScanner:
 	if p.haslayer(Dot11):
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
-                    currentStamp = str(datetime.now()).split('.')[0]
+                    """change timestamp format to have no special characters"""
+                    currentStamp = datetime.now().split('.')[0].strftime('%Y%m%d%H%M%S')
+                    print currentStamp
                     logging.info(p.addr2 + " " + currentStamp)
-		    self.combo['Time Stamps'].append(currentStamp)
-		    self.combo['Addresses'].append(p.addr2)
+		    self.combo["Time Stamps"].append(currentStamp)
+		    self.combo["Addresses"].append(p.addr2)
 		    self.dictionary = dict(self.combo)
 
     def restart(self, timeLimit):
         self.observedclients = []
         self.timeStamps = []
-        self.combo = dict()
         logging.debug("Sleeping")
         time.sleep(timeLimit)
         logging.debug("Waking up")
@@ -54,11 +60,11 @@ class MacScanner:
     def startSniffing(self,timeLimit):
 	while True:
 	    sniff(iface=self.interface, prn=self.sniffmgmt, timeout=timeLimit)
-	    self.savetofile(self.combo)
+	    self.savetofile(self.dictionary)
             self.restart(timeLimit)
             logging.debug("Starting sniffing again")
     
-def main(timeLimit = 60):
+def main(timeLimit = 20):
     mac = MacScanner()
     mac.initLogger()
     mac.startSniffing(timeLimit)
