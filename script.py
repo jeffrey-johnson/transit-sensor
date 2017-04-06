@@ -29,8 +29,14 @@ class MacScanner:
         if not(os.path.exists(filetime.split()[0])):
             os.makedirs(filetime.split()[0])
         logging.debug("Writing to file")
-        for root, dirs, files in os.walk(filetime.split()[0],topdown=False):
-            fileCounter = int(files[0].split('.')[0][4:]) + 1
+        for root, dirs, files in os.walk(filetime.split()[0]):
+            if not (files):
+		pass
+	    else:
+		print files
+		#fileCounter = int(files[0].split('.')[0][4:]) + 1
+		fileCounter = int(files[-1].split('.')[0][4:]) + 1
+	print fileCounter
         with open(os.path.join(filetime.split()[0], 'data'+str(fileCounter)+'.json'), 'w') as fp:
             json.dump(d, fp,sort_keys=False)
 	call(["ls", filetime.split()[0]])
@@ -42,11 +48,12 @@ class MacScanner:
 	if p.haslayer(Dot11):
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
-                    """change timestamp format to have no special characters"""
-                    currentStamp = datetime.now().split('.')[0].strftime('%Y%m%d%H%M%S')
-                    print currentStamp
+            	    print p
+	            """change timestamp format to have no special characters"""
+                    currentStamp = datetime.now().strftime('%Y%m%d%H%M%S')
+		    print(p.addr2)
                     logging.info(p.addr2 + " " + currentStamp)
-		    self.combo["Time Stamps"].append(currentStamp)
+		    self.combo["Time Stamps"].append(str(currentStamp))
 		    self.combo["Addresses"].append(p.addr2)
 		    self.dictionary = dict(self.combo)
 
