@@ -2,28 +2,24 @@ import requests
 from datetime import datetime
 import json
 from pprint import pprint
+import os.path
 
-with open('data.json') as data_file:
-    data = json.load(data_file)
+fileCounter = 0;
+while os.path.exists('data'+str(fileCounter)+'.json') & os.path.isfile('data'+str(fileCounter)+'.json'):
+	with open('data'+str(fileCounter)+'.json') as data_file:
+	    data = json.load(data_file)
 
-pprint(data)
+	for x in range(0, len(data["timestamps"])):
+		thisRecord = {"time":data["timestamps"][x],"address":data["addresses"][x],"deviceID":data["deviceID"]}
+		resp = requests.post("http://uaf135131.ddns.uark.edu/api.php/Timestamps", json=thisRecord)#json=thisRecord)
+		if resp.status_code != 200:
+			print('Failed '+str(x))
+			print(resp.status_code)
+		else:
+			print('Success '+str(x))
+		print str(resp.content)
 
-print(data["timestamps"][0])
-for x in range(0, len(data["timestamps"])):
-	timestamp = data["timestamps"][x]
-	timestampDate = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
-	isoDate = timestampDate.isoformat()
-	unixtime = datetime.mktime(timestampDate.timetuple())
-	#print unixtime
-	thisRecord = {"time":timestamp,"address":data["addresses"][x],"deviceID":data["deviceID"]}
-	resp = requests.post("http://uaf135131.ddns.uark.edu/api.php/Timestamps", json=thisRecord)#json=thisRecord)
-	if resp.status_code != 200:
-		print('Failed '+str(x))
-		print(resp.status_code)
-	else:
-		print('Success '+str(x))
-	print str(resp.content)
-	print('\n\n')
+	fileCounter+=1;
 #timestamp = {"time":, "isInitialDetection":1, "deviceID":3, "addressID":5, "routeID":7, "busID":9}
 #resp = requests.post("http://uaf135131.ddns.uark.edu/api.php/Timestamps", json=timestamp)
 #if resp.status_code != 200:
