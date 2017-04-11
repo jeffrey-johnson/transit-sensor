@@ -34,9 +34,8 @@ class MacScanner:
 		pass
 	    else:
 		print files
-		#fileCounter = int(files[0].split('.')[0][4:]) + 1
-		fileCounter = int(files[-1].split('.')[0][4:]) + 1
-	print fileCounter
+		fileCounter = int(files[0].split('.')[0][4:]) + 1
+		#fileCounter = int(files[-1].split('.')[0][4:]) + 1 """If this line messes up, use the above one and viceversa"""
         with open(os.path.join(filetime.split()[0], 'data'+str(fileCounter)+'.json'), 'w') as fp:
             json.dump(d, fp,sort_keys=False)
 	call(["ls", filetime.split()[0]])
@@ -48,10 +47,8 @@ class MacScanner:
 	if p.haslayer(Dot11):
 	    if p.type == 0 and p.subtype in stamgmtstypes:
 		if p.addr2 not in self.observedclients:
-            	    print p
 	            """change timestamp format to have no special characters"""
                     currentStamp = datetime.now().strftime('%Y%m%d%H%M%S')
-		    print(p.addr2)
                     logging.info(p.addr2 + " " + currentStamp)
 		    self.combo["Time Stamps"].append(str(currentStamp))
 		    self.combo["Addresses"].append(p.addr2)
