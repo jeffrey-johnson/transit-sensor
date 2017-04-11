@@ -10,7 +10,8 @@ timestamp2 = {"time":datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), "isI
 timestamps = [timestamp, timestamp2]
 
 jsonString =  json.dumps(data)
-print (jsonString)
+print (jsonString) #this will send nothing 
+print data #This will send the last value in a json list
 resp = requests.post("http://uaf135131.ddns.uark.edu/test.php", data=(jsonString))
 if resp.status_code != 200:
 	#raise Error('POST TO /timestamps/ {}'.format(resp.status_code))
