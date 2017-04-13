@@ -7,12 +7,14 @@ import os.path
 def sendData(serverAddress, pathToJSONDirectory):
 	fileCounter = 0;
 	while os.path.exists('data'+str(fileCounter)+'.json') & os.path.isfile('data'+str(fileCounter)+'.json'):
-		with open('data'+str(fileCounter)+'.json') as data_file:
+		if(pathToJSONDirectory[-1] != '/')
+			pathToJSONDirectory = pathToJSONDirectory + '/'
+		with open(pathToJSONDirectory + 'data'+str(fileCounter)+'.json') as data_file:
 		    data = json.load(data_file)
 
 		for x in range(0, len(data["timestamps"])):
 			thisRecord = {"time":data["timestamps"][x],"address":data["addresses"][x],"deviceID":data["deviceID"]}
-			resp = requests.post("http://uaf135131.ddns.uark.edu/api.php/Timestamps", json=thisRecord)#json=thisRecord)
+			resp = requests.post(serverAddress, json=thisRecord)#json=thisRecord)
 			if resp.status_code != 200:
 				print('Failed '+str(x))
 				print(resp.status_code)
@@ -20,4 +22,4 @@ def sendData(serverAddress, pathToJSONDirectory):
 				print('Success '+str(x))
 			print str(resp.content)
 
-		fileCounter+=1;
+		fileCounter+=1
