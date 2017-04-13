@@ -13,8 +13,8 @@ def sendData(serverAddress, pathToJSONDirectory):
 		with open(pathToJSONDirectory + 'data'+str(fileCounter)+'.json') as data_file:
 		    data = json.load(data_file)
 
-		for x in range(0, len(data["timestamps"])):
-			thisRecord = {"time":data["timestamps"][x],"address":data["addresses"][x],"deviceID":data["deviceID"]}
+		for x in range(0, len(data["Time Stamps"])):
+			thisRecord = {"time":data["Time Stamps"][x],"address":data["Addresses"][x],"deviceID":data["DEVICE_ID"]}
 			resp = requests.post(serverAddress, json=thisRecord)#json=thisRecord)
 			if resp.status_code == 200:
 				numRecsSentSuccessfully+=1
