@@ -1,4 +1,5 @@
 #/usr/bin/env python
+
 from scapy.all import *
 from datetime import datetime
 from subprocess import call
@@ -35,7 +36,9 @@ class MacScanner:
 	    else:
 		print files
 		fileCounter = int(files[0].split('.')[0][4:]) + 1
-		#fileCounter = int(files[-1].split('.')[0][4:]) + 1 """If this line messes up, use the above one and viceversa"""
+                #fileCounter = int(files[-1].split('.')[0][4:]) + 1 
+                print fileCounter, dirs, root
+                """If this line messes up, use the above one and viceversa"""
         with open(os.path.join(filetime.split()[0], 'data'+str(fileCounter)+'.json'), 'w') as fp:
             json.dump(d, fp,sort_keys=False)
 	call(["ls", filetime.split()[0]])

@@ -1,0 +1,6 @@
+#!/bin/bash
+tmux new -s my_session
+#python /home/pi/Documents/GProjects/transit-sensonr/scriot.py
+#python /home/pi/Documents/GProjects/transit-sensonr/main.py
+cmatrix
+tmux detach
