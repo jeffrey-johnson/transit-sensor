@@ -14,7 +14,7 @@ def connectDB():
 """Delete unique addresses, this removes any address that wasnt picked up a second time"""
 def deleteUnique(db,cursor):
    cursor.execute('DELETE FROM Timestamps WHERE address IN ( SELECT * FROM ( SELECT address FROM Timestamps GROUP BY address HAVING (COUNT(*) = 1)) AS p )')
-   cursor.commit()
+   db.commit()
 
 """Printing function to see the table"""
 def printTimestamp(cursor):
@@ -25,7 +25,7 @@ def printTimestamp(cursor):
 """Deletes non unique addresses with a time of riding under 2 minutes
    Gets the first and last appearence of the rider, gets the time difference
    and deletes it if it is under 2 minutes"""
-def deleteUnderThreshold(cursor):
+def deleteUnderThreshold(db,cursor):
    cursor.execute('SELECT time, address FROM Timestamps WHERE address IN (SELECT address FROM Timestamps Group By address having count(*) != 1)')
    timestamps = []
    addresses = []
@@ -49,10 +49,12 @@ def deleteUnderThreshold(cursor):
       print address_list[i], time_difference[i].total_seconds() < 120
    deletes = []
    for name, time in zip(address_list, [x for x in time_difference if x.total_seconds() < 120]):
+      print name,time
       deletes.append(name)
+   print deletes
    for i in deletes:
       cursor.execute("DELETE FROM Timestamps WHERE address = (%s)",[i])
-   cursor.commit() 
+   db.commit() 
 
 """Closes the database"""
 def closeDB(db,cursor):
@@ -62,6 +64,9 @@ def closeDB(db,cursor):
 """main function to call the others"""
 if __name__ == '__main__' :
    db, cursor = connectDB()
-   getTimeStamps(cursor)
-   #deleteUnique(db,cursor)
+
+   printTimestamp(cursor)
+   deleteUnderThreshold(db,cursor)
+   printTimestamp(cursor)
+   deleteUnique(db,cursor)
    closeDB(db,cursor)
