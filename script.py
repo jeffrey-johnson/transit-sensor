@@ -9,7 +9,7 @@ import time
 import os
 
 class MacScanner:
-	
+    """Initializes the class varaibles used"""	
     def __init__(self):
 	self.interface = "wlan0"
 	self.observedclients = []
@@ -18,11 +18,12 @@ class MacScanner:
         self.timeLimit = 0
 	self.dictionary =dict()
 
+    """Initalizes the logger for logging things"""
     def initLogger(self):
         # create debug file handler and set level to debug
         logging.basicConfig(filename='all.log',level=logging.DEBUG)
 
-    """Writes a dictionary containing the Timestamp and MAC address to a json file"""
+    """Writes a dictionary containing the Timestamp and MAC address to sequential JSON files"""
     def savetofile(self,d):
         fileCounter = 0
         filetime = str(datetime.now())
@@ -33,12 +34,11 @@ class MacScanner:
             if not (files):
 		pass
 	    else:
-		print files
 		fileCounter = int(files[0].split('.')[0][4:]) + 1
 		#fileCounter = int(files[-1].split('.')[0][4:]) + 1 """If this line messes up, use the above one and viceversa"""
         with open(os.path.join(filetime.split()[0], 'data'+str(fileCounter)+'.json'), 'w') as fp:
             json.dump(d, fp,sort_keys=False)
-	call(["ls", filetime.split()[0]])
+	logging.debug(call(["ls", filetime.split()[0]]))
 
     """Takes any given packet that scapy sniffs and filters it down to a macaddress that has not been seen yet
        It then appends a timestamp to the address and saves it to a dictionary."""
@@ -54,20 +54,24 @@ class MacScanner:
 		    self.combo["Addresses"].append(p.addr2)
 		    self.dictionary = dict(self.combo)
 
+    """Resets the observed list and timestamps and restarts after a period of time"""
     def restart(self, timeLimit):
         self.observedclients = []
         self.timeStamps = []
         logging.debug("Sleeping")
         time.sleep(timeLimit)
         logging.debug("Waking up")
-
+    
+    """Calls the sniffing function, after a certain amount of time, it writes to a JSON file
+       and restarts the process"""
     def startSniffing(self,timeLimit):
 	while True:
 	    sniff(iface=self.interface, prn=self.sniffmgmt, timeout=timeLimit)
 	    self.savetofile(self.dictionary)
             self.restart(timeLimit)
             logging.debug("Starting sniffing again")
-    
+
+"""Main function that initializes the class"""
 def main(timeLimit = 20):
     mac = MacScanner()
     mac.initLogger()
