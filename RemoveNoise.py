@@ -2,6 +2,7 @@
 
 import MySQLdb
 from datetime import datetime
+
 """Connect to database"""
 def connectDB():
    db = MySQLdb.connect(host='localhost',
@@ -18,7 +19,7 @@ def deleteUnique(db,cursor):
 
 """Printing function to see the table"""
 def printTimestamp(cursor):
-   cursor.execute("SELECT * FROM Timestamps")
+   cursor.execute("SELECT time, address FROM Timestamps")
    for row in cursor.fetchall():
       print row
 
@@ -34,23 +35,25 @@ def deleteUnderThreshold(db,cursor):
    for row in cursor.fetchall():
       timestamps.append(row[0])
       addresses.append(row[1])
-   
    for i in range(len(timestamps)):
 	min_time = timestamps[i]
 	min_addr = addresses[i]
+        print "min_time staring is {}, min_addr is{}".format(min_time, min_addr)
+	print len(timestamps), i
 	for j in range(len(timestamps)):
 	   if addresses[j] != addresses[i] or j+1 >= len(timestamps):
 	      address_list.append(addresses[j-1])
+	      print timestamps[j-1],  min_time, addresses[j-1]
 	      time_difference.append(timestamps[j-1] - min_time)
 	      i = j
+	      min_time = timestamps[i]
         if addresses[i] == addresses[-1]:
 	   break
+   deletes = []
    for i in range(len(address_list)):
       print address_list[i], time_difference[i].total_seconds() < 120
-   deletes = []
-   for name, time in zip(address_list, [x for x in time_difference if x.total_seconds() < 120]):
-      print name,time
-      deletes.append(name)
+      if time_difference[i].total_seconds() < 120:
+	 deletes.append(address_list[i])
    print deletes
    for i in deletes:
       cursor.execute("DELETE FROM Timestamps WHERE address = (%s)",[i])
@@ -64,7 +67,6 @@ def closeDB(db,cursor):
 """main function to call the others"""
 if __name__ == '__main__' :
    db, cursor = connectDB()
-
    printTimestamp(cursor)
    deleteUnderThreshold(db,cursor)
    printTimestamp(cursor)
