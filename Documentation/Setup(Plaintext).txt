@@ -36,5 +36,6 @@ Last Revision by Christopher Lail on 3/30/2017
 	- Type “sudo reboot”. 
 	- Once rebooted, login using the same login as above.
 4.  Install Scapy library.
-	- 
-	- 
+	- Once rebooted, login using the same login as above.
+	- Type “sudo apt-get install python-pip”
+	- Type “sudo pip install scapy”
