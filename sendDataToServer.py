@@ -9,8 +9,8 @@ def sendData(serverAddress, pathToJSONDirectory):
 	numRecsSentSuccessfully = 0
 	if pathToJSONDirectory[-1] != '/':
 			pathToJSONDirectory = pathToJSONDirectory + '/'
-	while os.path.exists(pathToJSONDirectory+'data'+str(fileCounter)+'.json') & os.path.isfile(pathToJSONDirectory+'data'+str(fileCounter)+'.json'):
-		with open(pathToJSONDirectory + 'data'+str(fileCounter)+'.json') as data_file:
+	while os.path.exists(pathToJSONDirectory+str(fileCounter)+'.json') & os.path.isfile(pathToJSONDirectory+str(fileCounter)+'.json'):
+		with open(pathToJSONDirectory + str(fileCounter)+'.json') as data_file:
 		    data = json.load(data_file)
 
 		for x in range(0, len(data["Time Stamps"])):

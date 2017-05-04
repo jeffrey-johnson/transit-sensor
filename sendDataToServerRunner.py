@@ -1,5 +1,11 @@
 import sendDataToServer
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+print sendDataToServer.sendData("http://uaf135131.ddns.uark.edu/api.php/Timestamps","/Users/Jake/documents/transit-sensor/2017-04-18")
+=======
+>>>>>>> Stashed changes
 import socket
 REMOTE_SERVER = "http://uaf135131.ddns.uark.edu/api.php/Timestamps"
 try:
@@ -9,3 +15,7 @@ except:
     print "Error connection"
     pass
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes

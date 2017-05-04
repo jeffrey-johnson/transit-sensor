@@ -40,11 +40,12 @@ PRIMARY KEY (addressID)
 CREATE TABLE BusSchedule
 (
 	scheduleID int NOT NULL AUTO_INCREMENT,
-	busID int NOT NULL,
-	routeID int NOT NULL,
+	busID int,
+	routeID int,
+	routeColor varchar(25),
 	deviceID int NOT NULL,
-	startTime datetime NOT NULL,
-	endTime datetime NOT NULL,
+	startTime datetime,
+	endTime datetime,
 	PRIMARY KEY(scheduleID)
 );
 
